@@ -3,6 +3,7 @@ let paper = "Paper"
 let scissors = "Scissors"
 
 let result = ""
+let mistake = "Please enter rock, paper or scissors."
 
 function computerPlay() {
     let randomNumber = Math.floor(Math.random()*3) + 1
@@ -73,7 +74,9 @@ function playRound() {
             return result
         }
     } else {
-        return "Please enter rock, paper or scissors."
+        result = mistake
+        alert("Please enter rock, paper or scissors.")
+        return result
     }
 }
 
@@ -84,7 +87,9 @@ function game(){
 
     while (count < 5){
         playRound()
-        if (result === 'win') {
+        if (result === mistake) {
+            continue
+        } else if (result === 'win') {
             playerWins += 1
             count += 1
         } else if (result === 'lose') {
