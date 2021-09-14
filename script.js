@@ -1,115 +1,86 @@
-let rock = "Rock"
-let paper = "Paper"
-let scissors = "Scissors"
+const result = document.getElementById('roundResult')
+const playerScore = document.getElementById('playerScore')
+const cpuScore = document.getElementById('cpuScore')
 
-let result = ""
-let mistake = "Please enter rock, paper or scissors."
+var cpu
+var playerCount = 0
+var cpuCount = 0
 
-function computerPlay() {
-    let randomNumber = Math.floor(Math.random()*3) + 1
-    if (randomNumber === 1){
-        return rock
-    } else if (randomNumber === 2) {
-        return scissors
-    } else if (randomNumber === 3) {
-        return paper
+function cpuSelection(){
+    var rand = Math.floor(Math.random()*3) + 1
+    switch(rand) {
+        case 1: cpu = 'rock'
+        break;
+        case 2: cpu = 'paper'
+        break;
+        case 3: cpu = 'scissors'
+        break;
+    }
+    console.log(cpu)
+    return cpu
+}
+
+function playRound(e) {
+    if (playerCount === 5 || cpuCount === 5){
+        return;
+    }
+    result.innerText = ""
+    const playerSelection = e.target.id
+    console.log(playerSelection)
+    cpuSelection()
+    
+    switch(playerSelection) {
+        case 'rock':
+            if (cpu === 'paper') {
+                result.textContent = 'Rock gets covered by paper. You Lose!'
+                cpuCount += 1
+            } else if (cpu === 'scissors') {
+                result.textContent = 'Rock crushes scissors. You Win!'
+                playerCount += 1
+            } else if (cpu === playerSelection) {
+                result.textContent = "It's a Draw!"
+            }
+        break;
+        case 'paper':
+            if (cpu === 'rock') {
+                result.textContent = 'Paper covers rock. You Win!'
+                playerCount += 1
+            } else if (cpu === 'scissors') {
+                result.textContent = 'Paper is cut by scissors. You Lose!'
+                cpuCount += 1
+            } else if (cpu === playerSelection) {
+                result.textContent = "It's a Draw!"
+            }
+            break;
+        case 'scissors':
+            if (cpu === 'rock') {
+                result.textContent = 'Scissors get crushed by rock. You Lose!'
+                cpuCount += 1
+            } else if (cpu === 'paper') {
+                result.textContent = 'Scissors cuts paper. You Win!'
+                playerCount += 1
+            } else if (cpu === playerSelection) {
+                result.textContent = "It's a Draw!"
+            }
+            break;
+        }
+
+    playerScore.textContent = playerCount
+    cpuScore.textContent = cpuCount
+    gameOver()
+}
+
+function gameOver() {
+    if (playerCount < 5 && cpuCount < 5) {
+        return;
+    } else if (playerCount === 5){
+        alert("Game Over. You WIN!")
+    } else if (cpuCount === 5) {
+        alert("Game Over. You LOSE!")
     }
 }
 
-
-function playRound() {
-    let playerSelection = prompt("Select rock, paper or scissors")
-    const computerSelection = computerPlay()
-    playerSelection = playerSelection.toLowerCase()
-
-    if (playerSelection === 'rock') {
-        if (computerSelection === rock) {
-            console.log("Computer plays rock")
-            console.log ("It's a draw!")
-            result = "draw"
-            return result
-        } else if (computerSelection === scissors) {
-            console.log("Computer plays scissors")
-            console.log ("You win! Rock smashes scissors")
-            result = "win"
-            return result
-        } else if (computerSelection === paper) {
-            console.log("Computer plays paper")
-            console.log ("You lose! Paper covers rock")
-            result = "lose"
-            return result
-        }
-    } else if (playerSelection === 'scissors') {
-        if (computerSelection === rock) {
-            console.log("Computer plays rock")
-            console.log ("You lose! Rock smashes scissors")
-            result = "lose"
-            return result
-        } else if (computerSelection === scissors) {
-            console.log("Computer plays scissors")
-            console.log ("It's a draw!")
-            result = "draw"
-            return result
-        } else if (computerSelection === paper) {
-            console.log("Computer plays paper")
-            console.log ("You win! Scissors cuts paper")
-            result = "win"
-            return result
-        }
-    } else if (playerSelection === 'paper') {
-        if (computerSelection === rock) {
-            console.log("Computer plays rock")
-            console.log ("You win! Paper covers rock")
-            result = "win"
-            return result
-        } else if (computerSelection === scissors) {
-            console.log("Computer plays scissors")
-            console.log ("You lose! Scissors cuts paper")
-            result = "lose"
-            return result
-        } else if (computerSelection === paper) {
-            console.log("Computer plays paper")
-            console.log ("It's a draw!")
-            result = "draw"
-            return result
-        }
-    } else {
-        result = mistake
-        alert("Please enter rock, paper or scissors.")
-        return result
-    }
-}
-
-function game(){
-    let count = 0
-    let playerWins = 0
-    let computerWins = 0
-
-    while (count < 5){
-        playRound()
-        if (result === mistake) {
-            continue
-        } else if (result === 'win') {
-            playerWins += 1
-            count += 1
-        } else if (result === 'lose') {
-            computerWins += 1
-            count += 1
-        } else if (result === 'draw') {
-            count +=1
-        }
-        console.log ("Player: " + playerWins + " Computer: " + computerWins)
-    }
-
-    if (playerWins > computerWins) {
-        alert("You are the champion!")
-        console.log ("Winner")
-    } else if (computerWins > playerWins) {
-        alert("Better luck next time!")
-        console.log ("Loser")
-    } else if (playerWins === computerWins) {
-        alert("It's a draw! Try again")
-        console.log ("Try again")
-    }
-}
-console.log(game())
+const buttons = document.querySelectorAll('button')
+buttons.forEach((button) => {
+    button.addEventListener('click', playRound)
+})
